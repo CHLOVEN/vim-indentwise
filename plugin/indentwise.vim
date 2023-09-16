@@ -119,25 +119,25 @@ function! s:_get_line_of_relative_indent(first_line_of_current_range, last_line_
 
         if blank_line && blanks_have_null_indentation
           let indent_depth_changed = 1
-        elseif (candidate_line_indent != current_indent)
-            let accept_line = 1
+        elseif ((a:target_indent_depth == "!=") && candidate_line_indent != current_indent)
+          let accept_line = 1
         elseif ((a:target_indent_depth == "<") && candidate_line_indent < current_indent)
-            let accept_line = 1
+          let accept_line = 1
         elseif ((a:target_indent_depth == ">") && candidate_line_indent > current_indent)
-            let accept_line = 1
+          let accept_line = 1
         elseif (a:target_indent_depth == "==")
-            if candidate_line_indent == current_indent
-                if !skip_blanks || !blank_line
-                  if l:indent_depth_changed || !g:indentwise_equal_indent_skips_contiguous
-                      let accept_line = 1
-                      let indent_depth_changed = 0
-                  else
-                      let last_accepted_line = current_line
-                  endif
-                endif
-            elseif candidate_line_indent != current_indent
-                let indent_depth_changed = 1
+          if candidate_line_indent == current_indent
+            if !skip_blanks || !blank_line
+              if l:indent_depth_changed || !g:indentwise_equal_indent_skips_contiguous
+                let accept_line = 1
+                let indent_depth_changed = 0
+              else
+                let last_accepted_line = current_line
+              endif
             endif
+          elseif candidate_line_indent != current_indent
+            let indent_depth_changed = 1
+          endif
         endif
         if accept_line
             if !skip_blanks || !blank_line
@@ -258,8 +258,7 @@ endfunction
 
 " move_to_indent_block_scope_boundary {{{2
 " ==============================================================================
-function! <SID>move_to_indent_block_scope_boundary(fwd, vim_mode) range
-    let target_indent_depth = "<"
+function! <SID>move_to_indent_block_scope_boundary(fwd, vim_mode, target_indent_depth) range
     let current_column = col('.')
     let nreps = v:count1
     let operational_first_line = a:firstline
@@ -318,8 +317,7 @@ function! <SID>move_to_indent_block_scope_boundary(fwd, vim_mode) range
             endwhile
             break
         else
-            " let target_line = s:_get_line_of_relative_indent(a:firstline, a:lastline, a:fwd, target_indent_depth, reference_indent, 1, v:count1)
-            let target_line = s:_get_line_of_relative_indent(operational_first_line, operational_last_line, a:fwd, target_indent_depth, reference_indent, 1, 1)
+            let target_line = s:_get_line_of_relative_indent(operational_first_line, operational_last_line, a:fwd, a:target_indent_depth, reference_indent, 1, 1)
         endif
         let nreps -= 1
         if target_line < 0
@@ -432,13 +430,13 @@ nnoremap <silent> <Plug>(IndentWiseNextAbsoluteIndent)      :<C-U>call <SID>move
 vnoremap <silent> <Plug>(IndentWiseNextAbsoluteIndent)           :call <SID>move_to_absolute_indent_level(1, 0, "v")<CR>
 onoremap <silent> <Plug>(IndentWiseNextAbsoluteIndent)     V:<C-U>call <SID>move_to_absolute_indent_level(1, 0, "o")<CR>
 
-nnoremap <silent> <Plug>(IndentWiseBlockScopeBoundaryBegin)  :<C-U>call <SID>move_to_indent_block_scope_boundary(0, "n")<CR>
-vnoremap <silent> <Plug>(IndentWiseBlockScopeBoundaryBegin)       :call <SID>move_to_indent_block_scope_boundary(0, "v")<CR>
-onoremap <silent> <Plug>(IndentWiseBlockScopeBoundaryBegin) V:<C-U>call <SID>move_to_indent_block_scope_boundary(0, "o")<CR>
+nnoremap <silent> <Plug>(IndentWiseBlockScopeBoundaryBegin)  :<C-U>call <SID>move_to_indent_block_scope_boundary(0, "n", "!=")<CR>
+vnoremap <silent> <Plug>(IndentWiseBlockScopeBoundaryBegin)       :call <SID>move_to_indent_block_scope_boundary(0, "v", "!=")<CR>
+onoremap <silent> <Plug>(IndentWiseBlockScopeBoundaryBegin) V:<C-U>call <SID>move_to_indent_block_scope_boundary(0, "o", "!=")<CR>
 
-nnoremap <silent> <Plug>(IndentWiseBlockScopeBoundaryEnd)      :<C-U>call <SID>move_to_indent_block_scope_boundary(1, "n")<CR>
-vnoremap <silent> <Plug>(IndentWiseBlockScopeBoundaryEnd)           :call <SID>move_to_indent_block_scope_boundary(1, "v")<CR>
-onoremap <silent> <Plug>(IndentWiseBlockScopeBoundaryEnd)     V:<C-U>call <SID>move_to_indent_block_scope_boundary(1, "o")<CR>
+nnoremap <silent> <Plug>(IndentWiseBlockScopeBoundaryEnd)      :<C-U>call <SID>move_to_indent_block_scope_boundary(1, "n", "!=")<CR>
+vnoremap <silent> <Plug>(IndentWiseBlockScopeBoundaryEnd)           :call <SID>move_to_indent_block_scope_boundary(1, "v", "!=")<CR>
+onoremap <silent> <Plug>(IndentWiseBlockScopeBoundaryEnd)     V:<C-U>call <SID>move_to_indent_block_scope_boundary(1, "o", "!=")<CR>
 
 if !exists("g:indentwise_suppress_keymaps") || !g:indentwise_suppress_keymaps
     if !hasmapto('<Plug>(IndentWisePreviousLesserIndent)')
