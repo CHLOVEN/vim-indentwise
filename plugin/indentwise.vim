@@ -119,6 +119,8 @@ function! s:_get_line_of_relative_indent(first_line_of_current_range, last_line_
 
         if blank_line && blanks_have_null_indentation
           let indent_depth_changed = 1
+        elseif (candidate_line_indent != current_indent)
+            let accept_line = 1
         elseif ((a:target_indent_depth == "<") && candidate_line_indent < current_indent)
             let accept_line = 1
         elseif ((a:target_indent_depth == ">") && candidate_line_indent > current_indent)
