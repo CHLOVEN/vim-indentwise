@@ -89,9 +89,9 @@ endif
 function! s:_get_line_of_relative_indent(first_line_of_current_range, last_line_of_current_range, fwd, target_indent_depth, reference_indent, exclusive, count)
     let stepvalue = a:fwd ? 1 : -1
 
-    let skip_blanks = get(b:, "indentwise_skip_blanks", get(g:, "indentwise_skip_blanks", 1))
+    let skip_blanks                  = get(b:, "indentwise_skip_blanks", get(g:, "indentwise_skip_blanks", 1))
     let blanks_have_null_indentation = get(b:, "indentwise_blanks_have_null_indentation", get(g:, "indentwise_blanks_have_null_indentation", 1))
-    let treat_whitespace_as_blank = get(b:, "indentwise_treat_whitespace_as_blank", get(g:, "indentwise_treat_whitespace_as_blank", 1))
+    let treat_whitespace_as_blank    = get(b:, "indentwise_treat_whitespace_as_blank", get(g:, "indentwise_treat_whitespace_as_blank", 1))
 
     if a:fwd
         let stepvalue = 1
@@ -100,12 +100,12 @@ function! s:_get_line_of_relative_indent(first_line_of_current_range, last_line_
         let stepvalue = -1
         let current_line = a:first_line_of_current_range
     endif
-    let start_line = current_line
-    let last_accepted_line = current_line
-    let last_line_of_buffer = line('$')
-    let current_indent = indent(current_line)
+    let start_line           = current_line
+    let last_accepted_line   = current_line
+    let last_line_of_buffer  = line('$')
+    let current_indent       = indent(current_line)
     let indent_depth_changed = 0
-    let num_reps = a:count
+    let num_reps             = a:count
     while (current_line > 0 && current_line <= last_line_of_buffer && num_reps > 0)
         let current_line = current_line + stepvalue
         let candidate_line_indent = indent(current_line)
@@ -438,49 +438,48 @@ nnoremap <silent> <Plug>(IndentWiseBlockScopeBoundaryEnd)      :<C-U>call <SID>m
 vnoremap <silent> <Plug>(IndentWiseBlockScopeBoundaryEnd)           :call <SID>move_to_indent_block_scope_boundary(1, "v", "!=")<CR>
 onoremap <silent> <Plug>(IndentWiseBlockScopeBoundaryEnd)     V:<C-U>call <SID>move_to_indent_block_scope_boundary(1, "o", "!=")<CR>
 
-if !exists("g:indentwise_suppress_keymaps") || !g:indentwise_suppress_keymaps
-    if !hasmapto('<Plug>(IndentWisePreviousLesserIndent)')
-        map [- <Plug>(IndentWisePreviousLesserIndent)
-        sunmap [-
-    endif
-    if !hasmapto('<Plug>(IndentWisePreviousEqualIndent)')
-        map [= <Plug>(IndentWisePreviousEqualIndent)
-        sunmap [=
-    endif
-    if !hasmapto('<Plug>(IndentWisePreviousGreaterIndent)')
-        map [+ <Plug>(IndentWisePreviousGreaterIndent)
-        sunmap [+
-    endif
-    if !hasmapto('<Plug>(IndentWiseNextLesserIndent)')
-        map ]- <Plug>(IndentWiseNextLesserIndent)
-        sunmap ]-
-    endif
-    if !hasmapto('<Plug>(IndentWiseNextEqualIndent)')
-        map ]= <Plug>(IndentWiseNextEqualIndent)
-        sunmap ]=
-    endif
-    if !hasmapto('<Plug>(IndentWiseNextGreaterIndent)')
-        map ]+ <Plug>(IndentWiseNextGreaterIndent)
-        sunmap ]+
-    endif
-    if !hasmapto('<Plug>(IndentWisePreviousAbsoluteIndent)')
-        map [_ <Plug>(IndentWisePreviousAbsoluteIndent)
-        sunmap [_
-    endif
-    if !hasmapto('<Plug>(IndentWiseNextAbsoluteIndent)')
-        map ]_ <Plug>(IndentWiseNextAbsoluteIndent)
-        sunmap ]_
-    endif
-    if !hasmapto('<Plug>(IndentWiseBlockScopeBoundaryBegin)')
-        map [% <Plug>(IndentWiseBlockScopeBoundaryBegin)
-        sunmap [%
-    endif
-    if !hasmapto('<Plug>(IndentWiseBlockScopeBoundaryEnd)')
-        map ]% <Plug>(IndentWiseBlockScopeBoundaryEnd)
-        sunmap ]%
-    endif
-
-endif
+" if !exists("g:indentwise_suppress_keymaps") || !g:indentwise_suppress_keymaps
+    " if !hasmapto('<Plug>(IndentWisePreviousLesserIndent)')
+        " map [- <Plug>(IndentWisePreviousLesserIndent)
+        " sunmap [-
+    " endif
+    " if !hasmapto('<Plug>(IndentWisePreviousEqualIndent)')
+        " map [= <Plug>(IndentWisePreviousEqualIndent)
+        " sunmap [=
+    " endif
+    " if !hasmapto('<Plug>(IndentWisePreviousGreaterIndent)')
+        " map [+ <Plug>(IndentWisePreviousGreaterIndent)
+        " sunmap [+
+    " endif
+    " if !hasmapto('<Plug>(IndentWiseNextLesserIndent)')
+        " map ]- <Plug>(IndentWiseNextLesserIndent)
+        " sunmap ]-
+    " endif
+    " if !hasmapto('<Plug>(IndentWiseNextEqualIndent)')
+        " map ]= <Plug>(IndentWiseNextEqualIndent)
+        " sunmap ]=
+    " endif
+    " if !hasmapto('<Plug>(IndentWiseNextGreaterIndent)')
+        " map ]+ <Plug>(IndentWiseNextGreaterIndent)
+        " sunmap ]+
+    " endif
+    " if !hasmapto('<Plug>(IndentWisePreviousAbsoluteIndent)')
+        " map [_ <Plug>(IndentWisePreviousAbsoluteIndent)
+        " sunmap [_
+    " endif
+    " if !hasmapto('<Plug>(IndentWiseNextAbsoluteIndent)')
+        " map ]_ <Plug>(IndentWiseNextAbsoluteIndent)
+        " sunmap ]_
+    " endif
+    " if !hasmapto('<Plug>(IndentWiseBlockScopeBoundaryBegin)')
+        " map [% <Plug>(IndentWiseBlockScopeBoundaryBegin)
+        " sunmap [%
+    " endif
+    " if !hasmapto('<Plug>(IndentWiseBlockScopeBoundaryEnd)')
+        " map ]% <Plug>(IndentWiseBlockScopeBoundaryEnd)
+        " sunmap ]%
+    " endif
+" endif
 
 " 1}}}
 
