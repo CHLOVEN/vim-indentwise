@@ -117,10 +117,10 @@ function! s:_get_line_of_relative_indent(first_line_of_current_range, last_line_
       let blank_line = empty(getline(current_line))
     endif
 
-    if blank_line && blanks_have_null_indentation
-      let indent_depth_changed = 1
-    elseif ((a:target_indent_depth == "!=") && candidate_line_indent != current_indent)
+    if ((a:target_indent_depth == "!=") && candidate_line_indent != current_indent)
       let accept_line = 1
+    elseif blank_line && blanks_have_null_indentation
+      let indent_depth_changed = 1
     elseif ((a:target_indent_depth == "<") && candidate_line_indent < current_indent)
       let accept_line = 1
     elseif ((a:target_indent_depth == ">") && candidate_line_indent > current_indent)
@@ -280,7 +280,7 @@ function! <SID>move_to_indent_block_scope_boundary(fwd, vim_mode, target_indent_
         let reference_indent      = i
       endif
     endfor
-    
+
     " [ WHY?????????? Why do you even need this design ]
     if reference_indent == -1337
       " special case of 0-indent: any blank line is considered a block
