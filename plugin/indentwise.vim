@@ -116,8 +116,8 @@ function! s:_get_line_of_relative_indent(first_line_of_current_range, last_line_
     else
       let blank_line = empty(getline(current_line))
     endif
-
-    if ((a:target_indent_depth == "!=") && candidate_line_indent != current_indent)
+    
+    if ((a:target_indent_depth == "!=") && (candidate_line_indent != current_indent || (blank_line && candidate_line_indent == current_indent)))
       let accept_line = 1
     elseif blank_line && blanks_have_null_indentation
       let indent_depth_changed = 1
