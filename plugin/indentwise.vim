@@ -92,7 +92,7 @@ function! s:_get_line_of_relative_indent(first_line_of_current_range, last_line_
   let skip_blanks                  = get(b:, "indentwise_skip_blanks", get(g:, "indentwise_skip_blanks", 1))
   let blanks_have_null_indentation = get(b:, "indentwise_blanks_have_null_indentation", get(g:, "indentwise_blanks_have_null_indentation", 1))
   let treat_whitespace_as_blank    = get(b:, "indentwise_treat_whitespace_as_blank", get(g:, "indentwise_treat_whitespace_as_blank", 1))
-
+  
   if a:fwd
     let stepvalue    = 1
     let current_line = a:last_line_of_current_range
@@ -112,10 +112,12 @@ function! s:_get_line_of_relative_indent(first_line_of_current_range, last_line_
     let accept_line           = 0
 
     if treat_whitespace_as_blank
-      let blank_line = empty(matchstr(getline(current_line), '[^\s]'))
+      let blank_line = empty(matchstr(getline(current_line), '[^ \t]'))
     else
       let blank_line = empty(getline(current_line))
     endif
+    
+    echoerr "blank_line : '" . blank_line . "' | treat_whitespace_as_blank : " . treat_whitespace_as_blank
     
     if ((a:target_indent_depth == "!=") && (candidate_line_indent != current_indent || (blank_line && candidate_line_indent == current_indent)))
       let accept_line = 1
